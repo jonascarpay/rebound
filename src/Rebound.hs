@@ -5,6 +5,7 @@
 module Rebound
   ( -- * Bind
     Bind (..),
+    Bind1,
     unbind,
 
     -- * Non-optic combinators
@@ -32,6 +33,8 @@ import Data.List.NonEmpty
 
 data Bind b a = Bound b | Free a
   deriving (Functor, Foldable, Traversable, Show, Eq, Ord)
+
+type Bind1 = Bind ()
 
 {-# INLINE unbind #-}
 unbind :: (b -> r) -> (a -> r) -> Bind b a -> r
