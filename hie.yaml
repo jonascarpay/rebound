@@ -1,16 +1,5 @@
 cradle:
   multi:
-    # - path: "ignore/"
-    #   config: {cradle: {none: }}
 
     - path: "src"
       config: {cradle: {cabal: {component: "lib:rebound"}}}
-
-    - path: "app"
-      config: {cradle: {cabal: {component: "rebound:rebound-exe"}}}
-
-    - path: "test"
-      config: {cradle: {cabal: {component: "rebound:rebound-test"}}}
-
-    - path: "bench"
-      config: {cradle: {cabal: {component: "rebound:rebound-bench"}}}

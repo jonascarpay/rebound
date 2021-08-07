@@ -12,57 +12,20 @@ extra-doc-files:
   CHANGELOG.md
   README.md
 
--- category:
--- description:     description
--- synopsis:        one-line synopsis
--- homepage:        https://github.com/FIXME/rebound#readme
--- source-repository head
---   type:     git
---   location: git://github.com/FIXME/rebound.git
+synopsis:        Making bound Succ More
+homepage:        https://github.com/jonascarpay/rebound#readme
+category:        Language, Compiler/Interpreters
 
-common common-options
+source-repository head
+  type:     git
+  location: git://github.com/jonascarpay/rebound.git
+
+library
   build-depends:    base >=4.9 && <5
+  hs-source-dirs:   src
+  exposed-modules:  Lib
   default-language: Haskell2010
   ghc-options:
     -Wall -Wcompat -Widentities -Wincomplete-uni-patterns
     -Wincomplete-record-updates -Wredundant-constraints
     -fhide-source-paths -Wpartial-fields
-
-library
-  import:          common-options
-  hs-source-dirs:  src
-  exposed-modules: Lib
-  build-depends:
-    , containers
-    , mtl
-
-executable rebound-exe
-  import:         common-options
-  hs-source-dirs: app
-  main-is:        Main.hs
-  build-depends:  rebound
-  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
-
-test-suite rebound-test
-  import:         common-options
-  type:           exitcode-stdio-1.0
-  hs-source-dirs: test
-  main-is:        Spec.hs
-  build-depends:
-    , hspec
-    , HUnit
-    , rebound
-    , QuickCheck
-
-  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
-
-benchmark rebound-bench
-  import:         common-options
-  type:           exitcode-stdio-1.0
-  hs-source-dirs: bench
-  main-is:        Main.hs
-  build-depends:
-    , criterion
-    , rebound
-
-  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
