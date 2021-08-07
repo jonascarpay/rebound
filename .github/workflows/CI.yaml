@@ -21,7 +21,7 @@ jobs:
           name: jmc
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build rebound
-        run: nix build -L
+        run: nix build -L '.#packages.x86_64-linux."rebound:lib:rebound"'
       - name: Build rebound shell
         run: nix build -L '.#devShell.x86_64-linux'
 
