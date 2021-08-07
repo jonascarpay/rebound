@@ -22,9 +22,6 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build rebound
         run: nix build -L
-      # TODO `nix flake check` is currently system-dependent but should be used here
-      - name: Build rebound checks
-        run: nix build -L '.#checks.x86_64-linux."rebound:test:rebound-test"'
       - name: Build rebound shell
         run: nix build -L '.#devShell.x86_64-linux'
 
