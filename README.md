@@ -4,8 +4,8 @@
 
 _Make `bound` Succ more_
 
-Tools for working with de Bruijn-indices.
-Essentially just `bounds`'s '`Bound.Scope.Simple` module, i.e. the non-monadic version, but with extra tools for working with traversals.
+Tools for working with Bird/Paterson-style De Bruijn-indices.
+Essentially just `bounds`'s `Bound.Scope.Simple` module, i.e. the non-monadic version, but with extra tools for working with traversals, and with no dependencies.
 
 In particular, it adds 
 
@@ -17,3 +17,11 @@ instantiateOver  :: ASetter s t (Bind b a) a -> (b -> a) -> s -> t
 closedOver       :: Traversal s t a b -> s -> Either (NonEmpty a) t
 maybeClosedOver  :: Traversal s t a b -> s -> Maybe t
 ```
+
+This is useful, for example, when you have term- and type variables in the same expression data type.
+
+### Motivation
+
+I like `bound`'s API, but it's often annoying or impossible to massage your term representation into something that works.
+Therefore I often start out with something simpler (i.e. traversal-based rather than monadic) while experimenting.
+When it's time to optimize, I switch to a more efficient (non-quadratic) representation.
