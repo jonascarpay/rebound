@@ -2,10 +2,10 @@
 [![rebound on hackage](https://img.shields.io/hackage/v/rebound)](http://hackage.haskell.org/package/rebound)
 [![rebound on Stackage Nightly](https://stackage.org/package/rebound/badge/nightly)](https://stackage.org/nightly/package/rebound)
 
-_Make `bound` Succ more_
+_Make [`bound`](https://github.com/ekmett/bound/) Succ more_
 
 Tools for working with Bird/Paterson-style De Bruijn-indices.
-Essentially just `bounds`'s `Bound.Scope.Simple` module, i.e. the non-monadic version, but with extra tools for working with traversals, and with no dependencies.
+Essentially just [`bound`](https://github.com/ekmett/bound/)'s [`Bound.Scope.Simple`](https://hackage.haskell.org/package/bound-2.0.3/docs/Bound-Scope-Simple.html) module, i.e. the non-monadic version, but with extra tools for working with traversals, and with no dependencies.
 
 In particular, it adds 
 
