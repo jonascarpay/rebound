@@ -2,7 +2,30 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RankNTypes #-}
 
-module Rebound where
+module Rebound
+  ( -- * Bind
+    Bind (..),
+    unbind,
+
+    -- * Non-optic combinators
+    abstract,
+    abstract1,
+    instantiate,
+    instantiate1,
+    closed,
+    maybeClosed,
+    unsafeClosed,
+
+    -- * Optic combinators
+    abstractOver,
+    abstract1Over,
+    instantiateOver,
+    instantiate1Over,
+    closedOver,
+    maybeClosedOver,
+    unsafeClosedOver,
+  )
+where
 
 import Data.Functor.Identity
 import Data.List.NonEmpty
