@@ -25,11 +25,47 @@ maybeClosedOver  :: Traversal s t a b -> s -> Maybe t
 
 where `Bind` is equivalent to `bound`'s `Var`.
 
-### Example
+## Examples
+
+### Basic API
 
 ```haskell
 λ> abstract1Over (_Left . traverse) 'x' (Right 9)
 Right 9
 λ> abstract1Over (_Left . traverse) 'x' (Left "xyz")
 Left [Bound (),Free 'y',Free 'z']
+```
+
+### System F
+
+```haskell
+data Expr t v
+  = Var v
+  | Lam (Type t) (Expr t (Bind () v))
+  | App (Expr t v) (Expr t v)
+  | TyLam (Expr (Bind () t) v)
+  | TyApp (Expr t v) (Type t)
+  deriving (Eq, Show, Functor, Foldable, Traversable)
+
+data Type t
+  = TVar t
+  | TArr (Type t) (Type t)
+  | TForall (Type (Bind () t))
+  deriving (Eq, Show, Functor, Foldable, Traversable)
+
+exprT ::
+  Applicative m =>
+  (t -> m t') ->
+  (v -> m v') ->
+  (Expr t v -> m (Expr t' v'))
+exprT ft fv = error "exercise for the reader"
+
+exprTypes :: Traversal (Expr t v) (Expr t' v) t t'
+exprTypes f = exprT f pure
+
+lam :: Eq v => v -> Type t -> Expr t v -> Expr t v
+lam v t = Lam t . abstract1 v
+
+tyLam :: Eq t => t -> Expr t v -> Expr t v
+tyLam t = TyLam . abstract1Over exprTypes t
 ```
