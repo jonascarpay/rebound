@@ -52,6 +52,7 @@ data Type t
   = TVar t
   | TArr (Type t) (Type t)
   | TForall (Type (Bind () t))
+  deriving (Functor)
 
 traverseExpr ::
   Applicative m =>
@@ -71,4 +72,7 @@ lam v t = Lam t . abstract1Over vars v
 
 tyLam :: Eq t => t -> Expr t v -> Expr t v
 tyLam t = TyLam . abstract1Over types t
+
+forall :: Eq t => t -> Type t -> Type t
+forall t = TForall . abstract1 t
 ```
