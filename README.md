@@ -25,6 +25,8 @@ maybeClosedOver  :: Traversal s t a b -> s -> Maybe t
 
 where `Bind` is equivalent to `bound`'s `Var`.
 
+All of the functions in the above API have non-`Over` versions that mirror `bound`, for working with `Functor` and `Traversable` instances.
+
 ## Examples
 
 ### Basic API
@@ -45,27 +47,28 @@ data Expr t v
   | App (Expr t v) (Expr t v)
   | TyLam (Expr (Bind () t) v)
   | TyApp (Expr t v) (Type t)
-  deriving (Eq, Show, Functor, Foldable, Traversable)
 
 data Type t
   = TVar t
   | TArr (Type t) (Type t)
   | TForall (Type (Bind () t))
-  deriving (Eq, Show, Functor, Foldable, Traversable)
 
-exprT ::
+traverseExpr ::
   Applicative m =>
   (t -> m t') ->
   (v -> m v') ->
   (Expr t v -> m (Expr t' v'))
-exprT ft fv = error "exercise for the reader"
+traverseExpr ft fv = error "exercise for the reader"
 
-exprTypes :: Traversal (Expr t v) (Expr t' v) t t'
-exprTypes f = exprT f pure
+types :: Traversal (Expr t v) (Expr t' v) t t'
+types f = traverseExpr f pure
+
+vars :: Traversal (Expr t v) (Expr t v') v v'
+vars f = traverseExpr pure f
 
 lam :: Eq v => v -> Type t -> Expr t v -> Expr t v
-lam v t = Lam t . abstract1 v
+lam v t = Lam t . abstract1Over vars v
 
 tyLam :: Eq t => t -> Expr t v -> Expr t v
-tyLam t = TyLam . abstract1Over exprTypes t
+tyLam t = TyLam . abstract1Over types t
 ```
