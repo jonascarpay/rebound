@@ -18,6 +18,8 @@ module Rebound
     closed,
     maybeClosed,
     unsafeClosed,
+    unused,
+    maybeUnused,
 
     -- * Optic combinators
     abstractOver,
@@ -27,6 +29,8 @@ module Rebound
     closedOver,
     maybeClosedOver,
     unsafeClosedOver,
+    unusedOver,
+    maybeUnusedOver,
   )
 where
 
@@ -101,6 +105,14 @@ maybeClosed = maybeClosedOver traverse
 unsafeClosed :: (Show a, Traversable t) => t a -> t b
 unsafeClosed = unsafeClosedOver traverse
 
+{-# INLINE unused #-}
+unused :: Traversable t => t (Bind b a) -> Either (NonEmpty b) (t a)
+unused = unusedOver traverse
+
+{-# INLINE maybeUnused #-}
+maybeUnused :: Traversable t => t (Bind b a) -> Maybe (t a)
+maybeUnused = maybeUnusedOver traverse
+
 -- Over
 
 {-# INLINE abstractOver #-}
@@ -130,6 +142,14 @@ maybeClosedOver t = t (const Nothing)
 {-# INLINE unsafeClosedOver #-}
 unsafeClosedOver :: Show a => Traversal s t a b -> s -> t
 unsafeClosedOver t = runIdentity . t (error . mappend "Unbound variable: " . show)
+
+{-# INLINE unusedOver #-}
+unusedOver :: Traversal s t (Bind b a) a -> s -> Either (NonEmpty b) t
+unusedOver t = validationToEither . t (unbind (Failure . pure) pure)
+
+{-# INLINE maybeUnusedOver #-}
+maybeUnusedOver :: Traversal s t (Bind b a) a -> s -> Maybe t
+maybeUnusedOver t = t (unbind (const Nothing) pure)
 
 -- Lens stuff
 

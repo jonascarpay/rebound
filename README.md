@@ -21,6 +21,8 @@ instantiate1Over :: ASetter s t (Bind () a) a -> a -> s -> t
 instantiateOver  :: ASetter s t (Bind b a) a -> (b -> a) -> s -> t
 closedOver       :: Traversal s t a b -> s -> Either (NonEmpty a) t
 maybeClosedOver  :: Traversal s t a b -> s -> Maybe t
+unusedOver       :: Traversal s t (Bind b a) a -> s -> Either (NonEmpty b) t
+maybeUnusedOver  :: Traversal s t (Bind b a) a -> s -> Maybe t
 ```
 
 where `Bind` is equivalent to `bound`'s `Var`.
