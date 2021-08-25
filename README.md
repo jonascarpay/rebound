@@ -15,10 +15,10 @@ As a rule of thumb, if your expression forms a monad, use `bound`, if not, you m
 The main API consists of
 
 ```haskell
-abstract1Over    :: Eq a => ASetter s t a (Bind () a) -> a -> s -> t
-abstractOver     :: ASetter s t a (Bind b a) -> (a -> Maybe b) -> s -> t
-instantiate1Over :: ASetter s t (Bind () a) a -> a -> s -> t
-instantiateOver  :: ASetter s t (Bind b a) a -> (b -> a) -> s -> t
+abstract1Over    :: ASetter   s t a (Bind1 a) -> a -> s -> t
+abstractOver     :: ASetter   s t a (Bind b a) -> (a -> Maybe b) -> s -> t
+instantiate1Over :: ASetter   s t (Bind1 a) a -> a -> s -> t
+instantiateOver  :: ASetter   s t (Bind b a) a -> (b -> a) -> s -> t
 closedOver       :: Traversal s t a b -> s -> Either (NonEmpty a) t
 maybeClosedOver  :: Traversal s t a b -> s -> Maybe t
 unusedOver       :: Traversal s t (Bind b a) a -> s -> Either (NonEmpty b) t
@@ -29,6 +29,8 @@ where `Bind` is equivalent to `bound`'s `Var`.
 
 All of the functions in the above API have non-`Over` versions that mirror `bound`, for working with `Functor` and `Traversable` instances.
 
+Despite having no dependencies, the optics in this library are compatible with most optics libraries (lens, microlens, etc.).
+
 ## Examples
 
 ### Basic API
@@ -37,7 +39,7 @@ All of the functions in the above API have non-`Over` versions that mirror `boun
 λ> abstract1Over (_Left . traverse) 'x' (Right 9)
 Right 9
 λ> abstract1Over (_Left . traverse) 'x' (Left "xyz")
-Left [Bound (),Free 'y',Free 'z']
+Left [Bound1, Free 'y', Free 'z']
 ```
 
 ### System F
