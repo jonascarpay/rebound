@@ -12,7 +12,7 @@ extra-doc-files:
   CHANGELOG.md
   README.md
 
-synopsis:        Making bound Succ More
+synopsis:        Tools for working with traversal-based De Bruijn-indices
 homepage:        https://github.com/jonascarpay/rebound#readme
 category:        Language, Compiler/Interpreters
 

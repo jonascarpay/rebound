@@ -2,12 +2,16 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE RankNTypes #-}
 
 module Rebound
   ( -- * Bind
-    Bind (..),
+    Bind,
     Bind1,
+    pattern Bound,
+    pattern Bound1,
+    pattern Free,
     unbind,
 
     -- * Non-optic combinators
@@ -34,46 +38,25 @@ module Rebound
   )
 where
 
-import Control.Monad (ap)
-import Data.Bifoldable (Bifoldable (bifoldr))
-import Data.Bifunctor (Bifunctor (bimap))
-import Data.Bitraversable (Bitraversable (..))
-import Data.Data (Data)
 import Data.Functor.Identity (Identity (..))
 import Data.List.NonEmpty (NonEmpty)
-import GHC.Generics (Generic, Generic1)
 
--- Bind
-
-data Bind b a = Bound b | Free a
-  deriving (Functor, Foldable, Traversable, Show, Eq, Ord, Generic, Generic1, Data)
-
-instance Applicative (Bind b) where
-  pure = Free
-  (<*>) = ap
-
-instance Monad (Bind b) where
-  Free a >>= f = f a
-  Bound b >>= _ = Bound b
-
-instance Bifunctor Bind where
-  bimap f _ (Bound b) = Bound (f b)
-  bimap _ f (Free a) = Free (f a)
-
-instance Bifoldable Bind where
-  bifoldr f _ c0 (Bound b) = f b c0
-  bifoldr _ f c0 (Free a) = f a c0
-
-instance Bitraversable Bind where
-  bitraverse fb _ (Bound b) = Bound <$> fb b
-  bitraverse _ fa (Free a) = Free <$> fa a
+type Bind = Either
 
 type Bind1 = Bind ()
 
+pattern Bound :: b -> Either b a
+pattern Bound b = Left b
+
+pattern Bound1 :: Either () a
+pattern Bound1 = Left ()
+
+pattern Free :: a -> Either b a
+pattern Free a = Right a
+
 {-# INLINE unbind #-}
 unbind :: (b -> r) -> (a -> r) -> Bind b a -> r
-unbind f _ (Bound b) = f b
-unbind _ f (Free a) = f a
+unbind = either
 
 -- Non-optic
 
