@@ -55,6 +55,10 @@ type Bind = Either
 -- Most definitions in this library have special cases for single-argument abstractions.
 type Bind1 = Bind ()
 
+{-# COMPLETE Bound, Free #-}
+
+{-# COMPLETE Bound1, Free #-}
+
 -- | A bound variable parameterized by 'b'.
 pattern Bound :: b -> Bind b a
 pattern Bound b = Left b
