@@ -7,8 +7,8 @@ _Make [`bound`](https://github.com/ekmett/bound/) Succ more_
 Tools for working with traversal-based Bird/Paterson-style De Bruijn-indices, with zero non-base dependencies.
 
 Conceptually, this package is very similar to [`bound`](https://github.com/ekmett/bound/)'s [`Bound.Scope.Simple`](https://hackage.haskell.org/package/bound-2.0.3/docs/Bound-Scope-Simple.html) module, i.e. the non-monadic version, but with an API focused on general traversals.
-The simplest case where this is useful is when you have multiple variables/binders in the same expression data type, but this API works with any representation you can generate the appropriate traversal for.
-That means that it can also work with named representations, or a nested transformer stack like `bound` itself.
+The simplest case where this is useful is when you have multiple variables/binders in the same expression data type.
+More generally, the API works with any representation you can generate the appropriate traversal for, which includes named representations, or nested scope transformers like `bound` itself.
 
 As a rule of thumb, if your expression forms a monad, use `bound`, if not, you might be interested in this package instead.
 
@@ -27,9 +27,9 @@ maybeUnusedOver  :: Traversal s t (Bind b a) a -> s -> Maybe t
 
 where `Bind` is equivalent to `bound`'s `Var`.
 
-All of the functions in the above API have non-`Over` versions that mirror `bound`, for working with `Functor` and `Traversable` instances.
+All of the functions in the above API have versions without the `Over` suffix, that work on `Traversable` elements, similar to `bound`.
 
-Despite having no dependencies, the optics in this library are compatible with most optics libraries (lens, microlens, etc.).
+The optics in this library are compatible with most Van Laarhoven-style optics libraries (lens, microlens, etc.).
 
 ## Examples
 
