@@ -1,38 +1,40 @@
 {
   description = "rebound";
 
-  inputs.haskellNix.url = "github:input-output-hk/haskell.nix";
-  inputs.nixpkgs.follows = "haskellNix/nixpkgs-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-22.11";
   inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs.unify.url = "github:jonascarpay/unify";
 
-  outputs = { self, nixpkgs, flake-utils, haskellNix }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        overlay = self: _: {
-          hsPkgs =
-            self.haskell-nix.project' rec {
-              src = ./.;
-              compiler-nix-name = "ghc8105";
-              shell = {
-                tools = {
-                  cabal = { };
-                  ghcid = { };
-                  haskell-language-server = { };
-                  hlint = { };
-                  ormolu = { };
-                };
-              };
+  outputs = inputs:
+    let
+      overlay = final: prev: {
+        haskell = prev.haskell // {
+          packageOverrides = hfinal: hprev:
+            prev.haskell.packageOverrides hfinal hprev // {
+              rebound = hfinal.callCabal2nix "rebound" ./. { };
             };
         };
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [
-            haskellNix.overlay
-            overlay
-          ];
+        rebound = final.haskell.lib.compose.justStaticExecutables final.haskellPackages.rebound;
+      };
+      perSystem = system:
+        let
+          pkgs = import inputs.nixpkgs { inherit system; overlays = [ inputs.unify.overlay overlay ]; };
+          hspkgs = pkgs.haskellPackages;
+        in
+        {
+          devShell = hspkgs.shellFor {
+            withHoogle = true;
+            packages = p: [ p.rebound ];
+            buildInputs = [
+              hspkgs.cabal-install
+              hspkgs.haskell-language-server
+              hspkgs.hlint
+              hspkgs.ormolu
+              pkgs.bashInteractive
+            ];
+          };
+          defaultPackage = pkgs.rebound;
         };
-        flake = pkgs.hsPkgs.flake { };
-      in
-      flake
-    );
+    in
+    { inherit overlay; } // inputs.flake-utils.lib.eachDefaultSystem perSystem;
 }
